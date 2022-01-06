@@ -1,6 +1,11 @@
+import time
+
 from flask import Flask
 import os
 import logging
+import random
+import numpy as np
+from datetime import datetime
 
 app = Flask(__name__)
 healthy = True
@@ -19,7 +24,18 @@ def hello():
 @app.route('/bench')
 def bench():
     global healthy
-    log.warning('Hello World!')
+    if healthy:
+        return f"Bench from {os.environ['HOST']}!\n"
+    else:
+        return "Unhealthy", 503
+
+
+@app.route('/bench_slow_random')
+def bench_slow_random():
+    global healthy
+    sleep_time_ms = np.random.lognormal(1.5, 1, 1)[0]/1000
+    log.warning(sleep_time_ms)
+    time.sleep(sleep_time_ms)
     if healthy:
         return f"Bench from {os.environ['HOST']}!\n"
     else:
@@ -41,6 +57,7 @@ def unhealthy():
 
 
 if __name__ == "__main__":
+    random.seed(datetime.now())
     formatter = logging.Formatter(fmt="%(asctime)s.%(msecs)03d %(levelname)s %(module)s: %(message)s",
                                   datefmt="%H:%M:%S")
     log.setLevel(logging.WARNING)

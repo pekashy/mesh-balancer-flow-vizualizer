@@ -2,10 +2,13 @@ import sys
 import urllib.request
 from collections import Counter
 
+import time
+
 url, n_requests = sys.argv[1], int(sys.argv[2])
 
 count = Counter()
 count_fail = 0
+start = time.time()
 
 for i in range(n_requests):
     try:
@@ -15,6 +18,8 @@ for i in range(n_requests):
     except:
         count_fail += 1
 
+finish = time.time()
 for k in count:
     print(f"{k}: actual weight {count[k] / n_requests * 100}%")
+print(f"RPS: {n_requests/(finish-start)}")
 print(f"Failed: {count_fail}")
