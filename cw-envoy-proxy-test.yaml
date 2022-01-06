@@ -65,7 +65,7 @@ static_resources:
                   port_value: 8000
               health_check_config:
                 port_value: 8000
-              hostname: backend-12
+              hostname: backend-2
           - endpoint:
               address:
                 socket_address:

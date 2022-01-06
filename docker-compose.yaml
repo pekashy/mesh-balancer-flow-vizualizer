@@ -18,9 +18,11 @@ services:
       context: .
       dockerfile: Dockerfile-server
     environment:
-      - HOST=backend1-1
+      - HOST=backend-1
     networks:
       - envoymesh
+    volumes:
+      - ./logs:/logs
   backend-2:
     build:
       context: .
@@ -29,6 +31,8 @@ services:
       - HOST=backend-2
     networks:
       - envoymesh
+    volumes:
+      - ./logs:/logs
   backend-3:
     build:
       context: .
@@ -37,6 +41,8 @@ services:
       - HOST=backend-3
     networks:
       - envoymesh
+    volumes:
+      - ./logs:/logs
   backend-4:
     build:
       context: .
@@ -45,6 +51,7 @@ services:
       - HOST=backend-4
     networks:
       - envoymesh
-
+    volumes:
+      - ./logs:/logs
 networks:
   envoymesh: {}
