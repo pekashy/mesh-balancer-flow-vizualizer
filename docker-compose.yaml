@@ -1,0 +1,50 @@
+version: "3.7"
+services:
+  client-envoy:
+    build:
+      context: .
+      dockerfile: Dockerfile-client
+    ports:
+      - 8001:8001
+    networks:
+      - envoymesh
+    depends_on:
+    - "backend-1"
+    - "backend-2"
+    - "backend-3"
+    - "backend-4"
+  backend-1:
+    build:
+      context: .
+      dockerfile: Dockerfile-server
+    environment:
+      - HOST=backend1-1
+    networks:
+      - envoymesh
+  backend-2:
+    build:
+      context: .
+      dockerfile: Dockerfile-server
+    environment:
+      - HOST=backend-2
+    networks:
+      - envoymesh
+  backend-3:
+    build:
+      context: .
+      dockerfile: Dockerfile-server
+    environment:
+      - HOST=backend-3
+    networks:
+      - envoymesh
+  backend-4:
+    build:
+      context: .
+      dockerfile: Dockerfile-server
+    environment:
+      - HOST=backend-4
+    networks:
+      - envoymesh
+
+networks:
+  envoymesh: {}
