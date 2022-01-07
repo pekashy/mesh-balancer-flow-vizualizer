@@ -43,12 +43,14 @@ def bench():
 
 @app.route('/bench_slow_random')
 def bench_slow_random():
+    recv_time = time.time()
     global healthy
     sleep_time_ms = np.random.lognormal(1.5, 1, 1)[0]/1000
     log.warning(sleep_time_ms)
     time.sleep(sleep_time_ms)
     if healthy:
-        return f"Bench from {os.environ['HOST']}!\n"
+        resp_send_time = time.time()
+        return f"{os.environ['HOST']},{recv_time},{resp_send_time}"
     else:
         return "Unhealthy", 503
 

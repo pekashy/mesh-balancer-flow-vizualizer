@@ -1,6 +1,7 @@
 FROM envoyproxy/envoy-dev:latest
-RUN apt-get update && apt-get install -y bash curl python3
-
+RUN apt-get update && apt-get install -y software-properties-common && add-apt-repository ppa:deadsnakes/ppa && apt-get install -y bash curl python3.9 python3.9-distutils
+RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3.9 get-pip.py
+RUN pip install aiohttp==3.8.1 requests==2.25.1
 COPY ./cw-envoy-proxy-test.yaml /etc/envoy.yaml
 COPY ./client.py /client.py
 
