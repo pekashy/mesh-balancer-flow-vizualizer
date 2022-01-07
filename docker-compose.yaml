@@ -1,5 +1,13 @@
 version: "3.7"
 services:
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile-dash
+    volumes:
+      - ./results:/results
+    ports:
+      - 8050:8050
   client-envoy:
     build:
       context: .
@@ -13,6 +21,8 @@ services:
     - "backend-2"
     - "backend-3"
     - "backend-4"
+    volumes:
+    - ./results:/results
   backend-1:
     build:
       context: .

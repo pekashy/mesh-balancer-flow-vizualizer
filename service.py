@@ -21,6 +21,17 @@ def hello():
         return "Unhealthy", 503
 
 
+@app.route('/bench_timed')
+def bench_timed():
+    recv_time = time.time()
+    global healthy
+    if healthy:
+        resp_send_time = time.time()
+        return f"{os.environ['HOST']},{recv_time},{resp_send_time}"
+    else:
+        return "Unhealthy", 503
+
+
 @app.route('/bench')
 def bench():
     global healthy
