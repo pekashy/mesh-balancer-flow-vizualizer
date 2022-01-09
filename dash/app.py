@@ -4,6 +4,9 @@ from dash import dcc
 from dash import html
 import flask
 
+from active_requests_count import get_active_request_count_chart
+from pre_processing_delay import get_pre_processing_delay_chart
+from total_delay_chart import get_total_delay_chart
 from rps_chart import get_rps_chart
 from requests_timeline import get_requests_timeline
 
@@ -19,6 +22,18 @@ def layout():
             dcc.Graph(
                 id="rps-chart",
                 figure=get_rps_chart()
+            ),
+            dcc.Graph(
+                id="total-delay-chart",
+                figure=get_total_delay_chart()
+            ),
+            dcc.Graph(
+                id="pre-proc-delay-chart",
+                figure=get_pre_processing_delay_chart()
+            ),
+            dcc.Graph(
+                id="active_requests-for-time-chart",
+                figure=get_active_request_count_chart()
             ),
         ]
     )

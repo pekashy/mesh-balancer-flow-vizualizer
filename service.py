@@ -29,7 +29,7 @@ def bench_timed():
     global healthy
     if healthy:
         resp_send_time = time.time()
-        return jsonify(instance=os.environ['HOST'], resp_snd_time=resp_send_time, resp_rcv_time=recv_time)
+        return jsonify(instance=os.environ['HOST'], resp_snd_time=resp_send_time, req_rcv_time=recv_time)
     else:
         return "Unhealthy", 503
 
@@ -52,7 +52,7 @@ def bench_slow_random():
     time.sleep(sleep_time_ms)
     if healthy:
         resp_send_time = time.time()
-        return jsonify(instance=os.environ['HOST'], resp_snd_time=resp_send_time, resp_rcv_time=recv_time)
+        return jsonify(instance=os.environ['HOST'], resp_snd_time=resp_send_time, req_rcv_time=recv_time)
     else:
         return "Unhealthy", 503
 
