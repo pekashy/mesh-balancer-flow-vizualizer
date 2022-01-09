@@ -61,4 +61,4 @@ if __name__ == "__main__":
     file_handler = logging.FileHandler(f"/logs/{os.environ['HOST']}.log")
     file_handler.setFormatter(formatter)
     log.addHandler(file_handler)
-    app.run(host='0.0.0.0', port=8000, debug=False, threaded=False)
+    app.run(host='0.0.0.0', port=8000, debug=False)
