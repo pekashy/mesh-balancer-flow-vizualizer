@@ -17,13 +17,9 @@ async def make_request(session) -> Dict[str, Any]:
     req_snd_time = time.time()
     async with session.get(url) as resp:
         resp_rcv_time = time.time()
-        data = await resp.text()
-        instance, req_rcv_time, resp_snd_time = data.strip().split(',')
-        print(f"Request send time: {req_snd_time}; Request recv time: {req_rcv_time}; \
-            Response send time: {resp_snd_time}, Response received time: {resp_rcv_time}")
-        return {'instance': instance, 'req_snd_time': req_snd_time,
-                'req_rcv_time': req_rcv_time, 'resp_snd_time': resp_snd_time,
-                'resp_rcv_time': resp_rcv_time}
+        data = await resp.json()
+        data.update({'req_snd_time': req_snd_time, 'resp_rcv_time': resp_rcv_time})
+        return data
 
 
 async def make_requests():

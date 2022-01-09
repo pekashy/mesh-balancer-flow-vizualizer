@@ -5,9 +5,11 @@ import os
 import logging
 import random
 import numpy as np
+from flask import jsonify
 from datetime import datetime
 
 app = Flask(__name__)
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 healthy = True
 log = logging.getLogger('werkzeug')
 
@@ -27,7 +29,7 @@ def bench_timed():
     global healthy
     if healthy:
         resp_send_time = time.time()
-        return f"{os.environ['HOST']},{recv_time},{resp_send_time}"
+        return jsonify(instance=os.environ['HOST'], resp_snd_time=resp_send_time, resp_rcv_time=recv_time)
     else:
         return "Unhealthy", 503
 
@@ -50,7 +52,7 @@ def bench_slow_random():
     time.sleep(sleep_time_ms)
     if healthy:
         resp_send_time = time.time()
-        return f"{os.environ['HOST']},{recv_time},{resp_send_time}"
+        return jsonify(instance=os.environ['HOST'], resp_snd_time=resp_send_time, resp_rcv_time=recv_time)
     else:
         return "Unhealthy", 503
 
@@ -77,4 +79,4 @@ if __name__ == "__main__":
     file_handler = logging.FileHandler(f"/logs/{os.environ['HOST']}.log")
     file_handler.setFormatter(formatter)
     log.addHandler(file_handler)
-    app.run(host='0.0.0.0', port=8000, debug=False)
+    app.run(host='0.0.0.0', port=8000, debug=False, threaded=False)
