@@ -3,6 +3,8 @@ import dash_bootstrap_components as dbc
 from dash import dcc
 from dash import html
 import flask
+
+from rps_chart import get_rps_chart
 from requests_timeline import get_requests_timeline
 
 
@@ -11,8 +13,12 @@ def layout():
         children=[
             html.Div(children="""Request Flow for multiple instances of service"""),
             dcc.Graph(
-                id="example-graph",
+                id="instance-timeline",
                 figure=get_requests_timeline()
+            ),
+            dcc.Graph(
+                id="rps-chart",
+                figure=get_rps_chart()
             ),
         ]
     )
