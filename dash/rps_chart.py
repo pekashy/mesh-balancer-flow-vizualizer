@@ -1,24 +1,35 @@
+from collections import deque
+
 import plotly.express as px
 import pandas as pd
 import json
-
 from numpy import finfo
 
 
 def get_rps_chart():
     with open('/results/request_times.json') as data_file:
         probe_events_raw = json.load(data_file)
-    start_time = min(probe_events_raw, key=lambda x: x.get('req_snd_time', finfo('d').max)) \
-        .get('req_snd_time', finfo('d').max)
-    probe_events_raw_sorted_end = sorted(probe_events_raw, key=lambda e: (e.get('resp_rcv_time', finfo('d').max)))
-    rpses = list()
-    for request_id, probe_event_raw in enumerate(probe_events_raw_sorted_end):
-        resp_recv_time = probe_event_raw.get('resp_rcv_time')
-        req_snd_time = probe_event_raw.get('req_snd_time')
-        time_passed = resp_recv_time - start_time
-        rps = request_id / time_passed
-        rpses.append(dict(RPS=rps, TimeSent=pd.to_datetime(req_snd_time, unit='s'),
-                          TimeReceived=pd.to_datetime(resp_recv_time, unit='s')))
-    df = pd.DataFrame(rpses)
-    fig = px.line(df, x='TimeReceived', y='RPS', title='RPS for time')
+    probe_events_raw_sorted_end = deque(sorted(probe_events_raw, key=lambda e: (e.get('resp_rcv_time', finfo('d').max))))
+    start_time = min(probe_events_raw, key=lambda r: r.get('req_snd_time')).get('req_snd_time')
+    end_time = probe_events_raw_sorted_end[-1].get('resp_rcv_time')
+    timespan = end_time - start_time
+    timedelta = timespan / 1000.0
+    reqs_finished = 0
+    rps_chart = []
+    for i in range(1000):
+        currtime = start_time + timedelta*i
+        while len(probe_events_raw_sorted_end) > 0:
+            event = probe_events_raw_sorted_end.popleft()
+            event_resp_rcv_time = event.get('resp_rcv_time')
+
+            if event_resp_rcv_time > currtime:
+                probe_events_raw_sorted_end.appendleft(event)
+                break
+            reqs_finished += 1
+
+        rps = 1.0*reqs_finished/(timedelta*(i+1))
+        rps_chart.append(dict(RPS=rps, Time=pd.to_datetime(currtime, unit='s')))
+
+    df = pd.DataFrame(rps_chart)
+    fig = px.line(df, x='Time', y='RPS', title='RPS for time')
     return fig

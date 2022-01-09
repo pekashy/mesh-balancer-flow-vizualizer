@@ -1,6 +1,6 @@
 import time
 
-from flask import Flask
+from flask import Flask, request
 import os
 import logging
 import random
@@ -23,33 +23,15 @@ def hello():
         return "Unhealthy", 503
 
 
-@app.route('/bench_timed')
-def bench_timed():
-    recv_time = time.time()
-    global healthy
-    if healthy:
-        resp_send_time = time.time()
-        return jsonify(instance=os.environ['HOST'], resp_snd_time=resp_send_time, req_rcv_time=recv_time)
-    else:
-        return "Unhealthy", 503
-
-
 @app.route('/bench')
 def bench():
-    global healthy
-    if healthy:
-        return f"Bench from {os.environ['HOST']}!\n"
-    else:
-        return "Unhealthy", 503
-
-
-@app.route('/bench_slow_random')
-def bench_slow_random():
     recv_time = time.time()
     global healthy
-    sleep_time_ms = np.random.lognormal(1.5, 1, 1)[0]/1000
-    log.warning(sleep_time_ms)
-    time.sleep(sleep_time_ms)
+    slow = request.args.get("slow")
+    if slow:
+        sleep_time_ms = np.random.lognormal(1.5, 1, 1)[0]/1000
+        time.sleep(sleep_time_ms)
+
     if healthy:
         resp_send_time = time.time()
         return jsonify(instance=os.environ['HOST'], resp_snd_time=resp_send_time, req_rcv_time=recv_time)

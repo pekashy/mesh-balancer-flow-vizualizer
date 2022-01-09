@@ -20,6 +20,10 @@ def layout():
                 figure=get_requests_timeline()
             ),
             dcc.Graph(
+                id="active_requests-for-time-chart",
+                figure=get_active_request_count_chart()
+            ),
+            dcc.Graph(
                 id="rps-chart",
                 figure=get_rps_chart()
             ),
@@ -30,10 +34,6 @@ def layout():
             dcc.Graph(
                 id="pre-proc-delay-chart",
                 figure=get_pre_processing_delay_chart()
-            ),
-            dcc.Graph(
-                id="active_requests-for-time-chart",
-                figure=get_active_request_count_chart()
             ),
         ]
     )
