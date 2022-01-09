@@ -1,0 +1,10 @@
+FROM envoyproxy/envoy-dev:latest
+RUN apt-get update && apt-get install -y software-properties-common
+COPY ./envoy-balancer/envoy-config.yaml /etc/envoy.yaml
+
+RUN chmod go+r /etc/envoy.yaml
+
+EXPOSE 8001
+EXPOSE 30000
+
+CMD ["/usr/local/bin/envoy", "-c", "/etc/envoy.yaml", "--service-node", "${HOSTNAME}", "--service-cluster", "client"]

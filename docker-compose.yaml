@@ -3,17 +3,30 @@ services:
   dashboard:
     build:
       context: .
-      dockerfile: Dockerfile-dash
+      dockerfile: dashboard/Dockerfile-dashboard
     volumes:
       - ./results:/results
     ports:
-      - 8050:8050
-  client-envoy:
+      - "8050:8050"
+  tester:
     build:
       context: .
-      dockerfile: Dockerfile-client
+      dockerfile: Dockerfile-tester
+    networks:
+      - envoymesh
+    links:
+      - "balancer"
+    depends_on:
+      - "balancer"
+    volumes:
+    - ./results:/results
+  balancer:
+    build:
+      context: .
+      dockerfile: envoy-balancer/Dockerfile-balancer
     ports:
-      - 8001:8001
+      - "8001:8001"
+      - "30000:30000"
     networks:
       - envoymesh
     depends_on:
@@ -21,12 +34,10 @@ services:
     - "backend-2"
     - "backend-3"
     - "backend-4"
-    volumes:
-    - ./results:/results
   backend-1:
     build:
       context: .
-      dockerfile: Dockerfile-server
+      dockerfile: service/Dockerfile-service
     environment:
       - HOST=backend-1
     networks:
@@ -36,7 +47,7 @@ services:
   backend-2:
     build:
       context: .
-      dockerfile: Dockerfile-server
+      dockerfile: service/Dockerfile-service
     environment:
       - HOST=backend-2
     networks:
@@ -46,7 +57,7 @@ services:
   backend-3:
     build:
       context: .
-      dockerfile: Dockerfile-server
+      dockerfile: service/Dockerfile-service
     environment:
       - HOST=backend-3
     networks:
@@ -56,7 +67,7 @@ services:
   backend-4:
     build:
       context: .
-      dockerfile: Dockerfile-server
+      dockerfile: service/Dockerfile-service
     environment:
       - HOST=backend-4
     networks:
@@ -64,4 +75,5 @@ services:
     volumes:
       - ./logs:/logs
 networks:
-  envoymesh: {}
+  envoymesh:
+    driver: bridge

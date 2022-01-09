@@ -1,5 +1,4 @@
 import sys
-from collections import Counter
 import json
 import time
 from typing import Dict, Any
@@ -8,8 +7,6 @@ import asyncio
 
 url, n_requests = sys.argv[1], int(sys.argv[2])
 
-count = Counter()
-count_fail = 0
 start = time.time()
 
 
@@ -37,10 +34,7 @@ async def main():
         json.dump(request_times_list, f)
 
     finish = time.time()
-    for k in count:
-        print(f"{k}: actual weight {count[k] / n_requests * 100}%")
     print(f"RPS: {n_requests / (finish - start)}")
-    print(f"Failed: {count_fail}")
 
 
 asyncio.run(main())

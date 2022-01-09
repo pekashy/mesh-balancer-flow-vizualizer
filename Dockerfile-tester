@@ -1,0 +1,5 @@
+FROM python:3.9-buster
+RUN pip install aiohttp==3.8.1 requests==2.25.1
+COPY ./tester.py /tester.py
+ENTRYPOINT ["tail"]
+CMD ["-f","/dev/null"]

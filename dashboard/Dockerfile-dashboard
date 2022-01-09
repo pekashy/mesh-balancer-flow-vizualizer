@@ -2,9 +2,9 @@ FROM python:3.9
 
 ENV DASH_DEBUG_MODE True
 WORKDIR /app
-COPY ./dash/requirements.txt .
+COPY dashboard/requirements.txt .
 RUN set -ex && \
     pip install -r requirements.txt
 EXPOSE 8050
-COPY ./dash /app
+COPY dashboard /app
 CMD ["python", "app.py"]

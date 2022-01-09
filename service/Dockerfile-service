@@ -2,6 +2,6 @@ FROM python:3.9-buster
 RUN pip install Flask==0.11.1
 RUN pip install numpy
 RUN mkdir /code
-COPY ./service.py /code
+COPY ./service/service.py /code
 
 CMD ["python3", "/code/service.py"]
