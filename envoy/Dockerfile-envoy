@@ -1,6 +1,6 @@
 FROM envoyproxy/envoy-dev:latest
 RUN apt-get update && apt-get install -y software-properties-common
-COPY ./envoy-balancer/envoy-config.yaml /etc/envoy.yaml
+COPY ./envoy/envoy-config.yaml /etc/envoy.yaml
 
 RUN chmod go+r /etc/envoy.yaml
 

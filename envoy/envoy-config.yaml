@@ -53,33 +53,8 @@ static_resources:
           - endpoint:
               address:
                 socket_address:
-                  address: backend-1
-                  port_value: 8000
+                  address: balancer
+                  port_value: 11002
               health_check_config:
-                port_value: 8000
-              hostname: backend-1
-          - endpoint:
-              address:
-                socket_address:
-                  address: backend-2
-                  port_value: 8000
-              health_check_config:
-                port_value: 8000
-              hostname: backend-2
-          - endpoint:
-              address:
-                socket_address:
-                  address: backend-3
-                  port_value: 8000
-              health_check_config:
-                port_value: 8000
-              hostname: backend-3
-          - endpoint:
-              address:
-                socket_address:
-                  address: backend-4
-                  port_value: 8000
-              health_check_config:
-                port_value: 8000
-              hostname: backend-4
-
+                port_value: 11002
+              hostname: balancer

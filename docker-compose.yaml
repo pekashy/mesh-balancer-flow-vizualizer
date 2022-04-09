@@ -15,25 +15,35 @@ services:
     networks:
       - envoymesh
     links:
-      - "balancer"
+      - "envoy"
     depends_on:
-      - "balancer"
+      - "envoy"
     volumes:
     - ./results:/results
-  balancer:
+  envoy:
     build:
       context: .
-      dockerfile: envoy-balancer/Dockerfile-balancer
+      dockerfile: envoy/Dockerfile-envoy
     ports:
       - "8001:8001"
       - "30000:30000"
     networks:
       - envoymesh
     depends_on:
-    - "backend-1"
-    - "backend-2"
-    - "backend-3"
-    - "backend-4"
+    - "balancer"
+  balancer:
+    build:
+      context: .
+      dockerfile: pekashy/mesh-balancer:0.3
+    ports:
+      - "11002:11002"
+    networks:
+      - envoymesh
+    depends_on:
+      - "backend-1"
+      - "backend-2"
+      - "backend-3"
+      - "backend-4"
   backend-1:
     build:
       context: .
@@ -44,6 +54,8 @@ services:
       - envoymesh
     volumes:
       - ./logs:/logs
+    ports:
+      - "30001:8000"
   backend-2:
     build:
       context: .
@@ -54,6 +66,8 @@ services:
       - envoymesh
     volumes:
       - ./logs:/logs
+    ports:
+      - "30002:8000"
   backend-3:
     build:
       context: .
@@ -64,6 +78,8 @@ services:
       - envoymesh
     volumes:
       - ./logs:/logs
+    ports:
+      - "30003:8000"
   backend-4:
     build:
       context: .
@@ -74,6 +90,8 @@ services:
       - envoymesh
     volumes:
       - ./logs:/logs
+    ports:
+      - "30004:8000"
 networks:
   envoymesh:
     driver: bridge
