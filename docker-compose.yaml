@@ -32,9 +32,7 @@ services:
     depends_on:
     - "balancer"
   balancer:
-    build:
-      context: .
-      dockerfile: pekashy/mesh-balancer:0.3
+    image: pekashy/mesh-balancer:0.6
     ports:
       - "11002:11002"
     networks:

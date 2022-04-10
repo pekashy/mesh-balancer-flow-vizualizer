@@ -1,14 +1,6 @@
-node:
-  cluster: cw-test-cluster
-  id: cw-test-id
-admin:
-  address:
-    socket_address:
-      address: 0.0.0.0
-      port_value: 8001
 static_resources:
   listeners:
-  - name: backend
+  - name: main
     address:
       socket_address:
         address: 0.0.0.0
@@ -23,38 +15,31 @@ static_resources:
           route_config:
             name: local_route
             virtual_hosts:
-            - name: backend
+            - name: local_service
               domains:
               - "*"
               routes:
               - match:
                   prefix: "/"
                 route:
-                  cluster: backend
+                  cluster: balancer-cluster
           http_filters:
-          - name: envoy.filters.http.router
+            - name: envoy.router
+              typed_config: { }
   clusters:
-  - name: backend
+  - name: balancer-cluster
     type: STRICT_DNS
     lb_policy: ROUND_ROBIN
-    health_checks:
-      - interval: 2s
-        timeout: 3s
-        no_traffic_interval: 4s
-        no_traffic_healthy_interval: 4s
-        unhealthy_threshold: 1
-        healthy_threshold: 1
-        http_health_check:
-          path: "/"
     load_assignment:
-      cluster_name: backend
+      cluster_name: balancer-cluster
       endpoints:
-        lb_endpoints:
-          - endpoint:
-              address:
-                socket_address:
-                  address: balancer
-                  port_value: 11002
-              health_check_config:
+        - endpoint:
+            address:
+              socket_address:
+                address: balancer
                 port_value: 11002
-              hostname: balancer
+admin:
+  address:
+    socket_address:
+      address: 0.0.0.0
+      port_value: 8001
