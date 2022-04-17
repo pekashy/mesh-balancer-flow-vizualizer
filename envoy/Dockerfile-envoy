@@ -7,4 +7,4 @@ RUN chmod go+r /etc/envoy.yaml
 EXPOSE 8001
 EXPOSE 30000
 
-CMD ["/usr/local/bin/envoy", "-c", "/etc/envoy.yaml", "--service-node", "${HOSTNAME}", "--service-cluster", "client"]
+CMD ["/usr/local/bin/envoy", "-c", "/etc/envoy.yaml", "--log-level", "info", "--service-node", "${HOSTNAME}", "--service-cluster", "client"]

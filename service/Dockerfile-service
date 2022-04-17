@@ -1,5 +1,5 @@
 FROM python:3.9-buster
-RUN pip install Flask==0.11.1
+RUN pip install Flask==2.0.3
 RUN pip install numpy
 RUN mkdir /code
 COPY ./service/service.py /code

@@ -24,8 +24,22 @@ static_resources:
                 route:
                   cluster: balancer-cluster
           http_filters:
-            - name: envoy.router
-              typed_config: { }
+            - name: envoy.filters.http.lua
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
+                inline_code: |
+                  function envoy_on_request(request_handle)
+                    request_handle:logInfo("Hello!")
+                    request_handle:headers():add("foo", "bar")
+                  end
+                  function envoy_on_response(response_handle)
+                    response_handle:logInfo("Goodbye!")
+                    body_size = response_handle:body():length()
+                    response_handle:headers():add("response-body-size", tostring(body_size))
+                  end
+            - name: envoy.filters.http.router
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
   clusters:
   - name: balancer-cluster
     type: STRICT_DNS
@@ -33,13 +47,9 @@ static_resources:
     load_assignment:
       cluster_name: balancer-cluster
       endpoints:
-        - endpoint:
-            address:
+        - lb_endpoints:
+          - endpoint:
+             address:
               socket_address:
                 address: balancer
                 port_value: 11002
-admin:
-  address:
-    socket_address:
-      address: 0.0.0.0
-      port_value: 8001
