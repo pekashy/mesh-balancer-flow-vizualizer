@@ -23,6 +23,8 @@ static_resources:
                   prefix: "/"
                 route:
                   cluster: balancer-cluster
+                  internal_redirect_policy:
+                    redirect_response_codes: [ 302 ]
           http_filters:
             - name: envoy.filters.http.lua
               typed_config:
@@ -34,8 +36,7 @@ static_resources:
                   end
                   function envoy_on_response(response_handle)
                     response_handle:logInfo("Goodbye!")
-                    body_size = response_handle:body():length()
-                    response_handle:headers():add("response-body-size", tostring(body_size))
+                    response_handle:headers():add("response-body-size", tostring(1))
                   end
             - name: envoy.filters.http.router
               typed_config:

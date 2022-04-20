@@ -1,4 +1,4 @@
-FROM envoyproxy/envoy-dev:latest
+FROM envoyproxy/envoy:v1.22.0
 RUN apt-get update && apt-get install -y software-properties-common
 COPY ./envoy/envoy-config.yaml /etc/envoy.yaml
 
