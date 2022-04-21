@@ -47,7 +47,7 @@ static_resources:
                     local headers, body = response_handle:httpCall(
                       "recorder-cluster",
                       {
-                        [":method"] = "GET",
+                        [":method"] = "POST",
                         [":path"] = "/",
                         [":authority"] = "recorder-cluster",
                         ["x-request-id"] = rid
