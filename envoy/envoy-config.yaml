@@ -36,6 +36,16 @@ static_resources:
                   end
                   function envoy_on_response(response_handle)
                     response_handle:logInfo("Goodbye!")
+                    local headers, body = response_handle:httpCall(
+                      "recorder-cluster",
+                      {
+                        [":method"] = "GET",
+                        [":path"] = "/",
+                        [":authority"] = "recorder-cluster"
+                      },
+                      "hello world",
+                      5000,
+                      true)
                     response_handle:headers():add("response-body-size", tostring(1))
                   end
             - name: envoy.filters.http.router
@@ -54,3 +64,15 @@ static_resources:
               socket_address:
                 address: balancer
                 port_value: 11002
+  - name: recorder-cluster
+    type: STRICT_DNS
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: recorder-cluster
+      endpoints:
+        - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: balancer
+                    port_value: 11003

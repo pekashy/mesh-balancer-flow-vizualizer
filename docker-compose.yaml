@@ -32,9 +32,10 @@ services:
     depends_on:
     - "balancer"
   balancer:
-    image: pekashy/mesh-balancer:0.6
+    image: pekashy/mesh-balancer:0.7
     ports:
       - "11002:11002"
+      - "11003:11003"
     networks:
       - envoymesh
     depends_on:
