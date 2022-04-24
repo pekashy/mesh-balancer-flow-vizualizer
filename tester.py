@@ -5,18 +5,19 @@ from typing import Dict, Any
 import aiohttp
 import asyncio
 
-url, n_requests = sys.argv[1], int(sys.argv[2])
-
+n_requests = int(sys.argv[1])
+urls = ["http://0.0.0.0:30000/bench15", "http://0.0.0.0:30000/bench150", "http://0.0.0.0:30000/bench600"]
 start = time.time()
 
 
 async def make_request(session) -> Dict[str, Any]:
     req_snd_time = time.time()
-    async with session.get(url) as resp:
-        data = await resp.json()
-        resp_rcv_time = time.time()
-        data.update({'req_snd_time': req_snd_time, 'resp_rcv_time': resp_rcv_time})
-        return data
+    for url in urls:
+        async with session.get(url) as resp:
+            data = await resp.json()
+            resp_rcv_time = time.time()
+            data.update({'req_snd_time': req_snd_time, 'resp_rcv_time': resp_rcv_time})
+            return data
 
 
 async def make_requests():
