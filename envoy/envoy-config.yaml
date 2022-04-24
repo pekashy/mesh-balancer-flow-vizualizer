@@ -13,18 +13,52 @@ static_resources:
           codec_type: AUTO
           stat_prefix: ingress_http
           route_config:
-            name: local_route
             virtual_hosts:
-            - name: local_service
-              domains:
-              - "*"
+            - name: backend-1
+              domains: ["backend-1:8000"]
               routes:
-              - match:
-                  prefix: "/"
-                route:
-                  cluster: balancer-cluster
-                  internal_redirect_policy:
-                    redirect_response_codes: [ 302 ]
+                - match:
+                    prefix: "/"
+                  route:
+                    cluster: backend-1
+                    internal_redirect_policy:
+                      redirect_response_codes: [ 302 ]
+            - name: backend-2
+              domains: ["backend-2:8000"]
+              routes:
+                - match:
+                    prefix: "/"
+                  route:
+                    cluster: backend-2
+                    internal_redirect_policy:
+                      redirect_response_codes: [ 302 ]
+            - name: backend-3
+              domains: ["backend-3:8000"]
+              routes:
+                - match:
+                    prefix: "/"
+                  route:
+                    cluster: backend-3
+                    internal_redirect_policy:
+                      redirect_response_codes: [ 302 ]
+            - name: backend-4
+              domains: ["backend-4:8000"]
+              routes:
+                - match:
+                    prefix: "/"
+                  route:
+                    cluster: backend-4
+                    internal_redirect_policy:
+                      redirect_response_codes: [ 302 ]
+            - name: balancing
+              domains: ["*balancer*", "0.0.0.0:30000"]
+              routes:
+                - match:
+                    prefix: "/"
+                  route:
+                    cluster: balancer-cluster
+                    internal_redirect_policy:
+                      redirect_response_codes: [ 302 ]
           http_filters:
             - name: envoy.filters.http.lua
               typed_config:
@@ -84,3 +118,51 @@ static_resources:
                   socket_address:
                     address: balancer
                     port_value: 11003
+  - name: backend-1
+    type: STRICT_DNS
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: recorder-cluster
+      endpoints:
+        - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: backend-1
+                    port_value: 8000
+  - name: backend-2
+    type: STRICT_DNS
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: recorder-cluster
+      endpoints:
+        - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: backend-2
+                    port_value: 8000
+  - name: backend-3
+    type: STRICT_DNS
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: recorder-cluster
+      endpoints:
+        - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: backend-3
+                    port_value: 8000
+  - name: backend-4
+    type: STRICT_DNS
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: recorder-cluster
+      endpoints:
+        - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: backend-4
+                    port_value: 8000
