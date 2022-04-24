@@ -6,7 +6,7 @@ import aiohttp
 import asyncio
 
 n_requests = int(sys.argv[1])
-urls = ["http://0.0.0.0:30000/bench15", "http://0.0.0.0:30000/bench150", "http://0.0.0.0:30000/bench600"]
+urls = ["http://0.0.0.0:30000/bench10", "http://0.0.0.0:30000/bench50", "http://0.0.0.0:30000/bench300"]
 start = time.time()
 
 

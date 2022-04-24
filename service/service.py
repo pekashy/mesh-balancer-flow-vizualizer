@@ -39,11 +39,11 @@ def bench():
         return "Unhealthy", 503
 
 
-@app.route('/bench15')
-def bench15():
+@app.route('/bench10')
+def bench10():
     recv_time = time.time()
     global healthy
-    time.sleep(0.015)
+    time.sleep(0.01)
     if healthy:
         resp_send_time = time.time()
         return jsonify(instance=os.environ['HOST'], resp_snd_time=resp_send_time, req_rcv_time=recv_time)
@@ -51,11 +51,11 @@ def bench15():
         return "Unhealthy", 503
 
 
-@app.route('/bench150')
-def bench150():
+@app.route('/bench50')
+def bench50():
     recv_time = time.time()
     global healthy
-    time.sleep(0.150)
+    time.sleep(0.05)
     if healthy:
         resp_send_time = time.time()
         return jsonify(instance=os.environ['HOST'], resp_snd_time=resp_send_time, req_rcv_time=recv_time)
@@ -63,11 +63,11 @@ def bench150():
         return "Unhealthy", 503
 
 
-@app.route('/bench600')
-def bench600():
+@app.route('/bench500')
+def bench500():
     recv_time = time.time()
     global healthy
-    time.sleep(0.6)
+    time.sleep(0.5)
     if healthy:
         resp_send_time = time.time()
         return jsonify(instance=os.environ['HOST'], resp_snd_time=resp_send_time, req_rcv_time=recv_time)
