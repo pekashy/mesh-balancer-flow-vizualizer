@@ -1,12 +1,14 @@
-from collections import deque
-
-import plotly.express as px
-import pandas as pd
-import json
-from numpy import finfo
 import heapq
+import json
+from collections import deque
+from datetime import datetime
+
+import pandas as pd
+import plotly.express as px
+from numpy import finfo
 
 NUMBER_OF_POINTS = 200
+
 
 def get_active_request_count_chart():
     with open('/results/request_times.json') as data_file:
@@ -56,5 +58,6 @@ def get_active_request_count_chart():
                                               Time=pd.to_datetime(currtime, unit='s'), instance=instance))
 
     df = pd.DataFrame(active_requests_chart)
+    df.to_pickle("/results/active_requests_count_" + str(datetime.now().minute) + ".pkl")
     fig = px.line(df, x='Time', y='ActiveRequests', title='Active Requests for instance', color='instance')
     return fig

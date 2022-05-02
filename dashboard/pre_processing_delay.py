@@ -1,6 +1,8 @@
-import plotly.express as px
-import pandas as pd
 import json
+from datetime import datetime
+
+import pandas as pd
+import plotly.express as px
 from numpy import finfo
 
 
@@ -15,5 +17,6 @@ def get_pre_processing_delay_chart():
         proc_delay = processing_started_time - req_snd_time
         delays.append(dict(PreProcessingDelay=proc_delay, TimeSent=pd.to_datetime(req_snd_time, unit='s')))
     df = pd.DataFrame(delays)
+    df.to_pickle("/results/pre_processing_delay_" + str(datetime.now().minute) + ".pkl")
     fig = px.line(df, x='TimeSent', y='PreProcessingDelay', title='Delay before processing by request send time')
     return fig

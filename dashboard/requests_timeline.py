@@ -1,8 +1,9 @@
-import math
-
-import plotly.express as px
-import pandas as pd
 import json
+import math
+from datetime import datetime
+
+import pandas as pd
+import plotly.express as px
 
 
 def get_requests_timeline():
@@ -16,6 +17,7 @@ def get_requests_timeline():
                                  Id=request_id,
                                  LogId=math.log10(request_id + 1)))
     df = pd.DataFrame(probe_events)
+    df.to_pickle("/results/request_timeline_" + str(datetime.now().minute) + ".pkl")
     fig = px.timeline(df, x_start='Start', x_end='Finish', y='Instance', color='Id',
                       opacity=0.5, hover_data=['Start', 'Finish'])
     fig.update_yaxes(autorange='reversed')

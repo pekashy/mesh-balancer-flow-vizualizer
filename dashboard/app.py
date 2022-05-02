@@ -1,14 +1,14 @@
 import dash
 import dash_bootstrap_components as dbc
+import flask
 from dash import dcc
 from dash import html
-import flask
 
 from active_requests_count import get_active_request_count_chart
 from pre_processing_delay import get_pre_processing_delay_chart
-from total_delay_chart import get_total_delay_chart
-from rps_chart import get_rps_chart
 from requests_timeline import get_requests_timeline
+from rps_chart import get_rps_chart
+from total_delay_chart import get_total_delay_chart
 
 
 def layout():
@@ -46,5 +46,6 @@ app.layout = layout
 
 if __name__ == "__main__":
     import os
+
     debug = False if os.environ["DASH_DEBUG_MODE"] == "False" else True
     app.run_server(host="0.0.0.0", port=8050, debug=debug)
