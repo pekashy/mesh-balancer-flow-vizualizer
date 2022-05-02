@@ -43,7 +43,7 @@ def bench():
 def bench10():
     recv_time = time.time()
     global healthy
-    time.sleep(0.01)
+    time.sleep(0.02)
     if healthy:
         resp_send_time = time.time()
         return jsonify(instance=os.environ['HOST'], resp_snd_time=resp_send_time, req_rcv_time=recv_time)
@@ -67,7 +67,7 @@ def bench50():
 def bench500():
     recv_time = time.time()
     global healthy
-    time.sleep(0.5)
+    time.sleep(0.4)
     if healthy:
         resp_send_time = time.time()
         return jsonify(instance=os.environ['HOST'], resp_snd_time=resp_send_time, req_rcv_time=recv_time)
@@ -97,4 +97,4 @@ if __name__ == "__main__":
     file_handler = logging.FileHandler(f"/logs/{os.environ['HOST']}.log")
     file_handler.setFormatter(formatter)
     log.addHandler(file_handler)
-    app.run(host='0.0.0.0', port=8000, debug=False)
+    app.run(host='0.0.0.0', port=8000, debug=False, threaded=False)
